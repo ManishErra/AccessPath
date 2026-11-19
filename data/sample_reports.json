@@ -1,0 +1,125 @@
+[
+  {
+    "id": "demo-b34-lift-001",
+    "location": "Block 34",
+    "locationAliases": [
+      "B34",
+      "B-34",
+      "b34",
+      "b-34",
+      "block 34",
+      "block-34",
+      "block34"
+    ],
+    "locationDetail": "Elevator access — floor coverage concern",
+    "category": "Lift / Elevator",
+    "title": "Question about lift floor coverage (demo example)",
+    "description": "Sample / Demo – Not Verified: Fictional demonstration record based on project interviews regarding lift floor coverage at Block 34. This is an illustrative demo record and not an independently verified statement.",
+    "reportedAt": "2026-11-12T09:30:00+05:30",
+    "status": "Active",
+    "source": "Sample",
+    "isSample": true,
+    "reporterContext": "Someone informed me",
+    "statusHistory": [
+      {
+        "status": "Active",
+        "at": "2026-11-12T09:30:00+05:30",
+        "note": "Sample record created for demonstration"
+      }
+    ]
+  },
+  {
+    "id": "demo-b33-lift-002",
+    "location": "Block 33",
+    "locationAliases": [
+      "B33",
+      "B-33",
+      "b33",
+      "b-33",
+      "block 33",
+      "block-33",
+      "block33"
+    ],
+    "locationDetail": "Building access — lift availability concern",
+    "category": "Lift / Elevator",
+    "title": "Lift availability concern (demo example)",
+    "description": "Sample / Demo – Not Verified: Fictional demonstration record based on project interviews noting that Block 33 was reported to have no lift. This is an illustrative demo record and not an independently verified statement.",
+    "reportedAt": "2026-11-11T12:00:00+05:30",
+    "status": "Under review",
+    "source": "Sample",
+    "isSample": true,
+    "reporterContext": "Someone informed me",
+    "statusHistory": [
+      {
+        "status": "Active",
+        "at": "2026-11-11T10:00:00+05:30",
+        "note": "Sample record created for demonstration"
+      },
+      {
+        "status": "Under review",
+        "at": "2026-11-11T12:00:00+05:30",
+        "note": "Demo status change: under review in prototype triage"
+      }
+    ]
+  },
+  {
+    "id": "demo-signage-003",
+    "location": "Campus — location to be confirmed",
+    "locationAliases": [
+      "ramp sign",
+      "ramp direction",
+      "signage",
+      "ramp",
+      "directions",
+      "pathway"
+    ],
+    "locationDetail": "Connecting path — exact route not specified",
+    "category": "Signage / Directions",
+    "title": "Ramp directions may be unclear (demo example)",
+    "description": "Sample / Demo – Not Verified: Fictional demonstration record illustrating reported ambiguity in ramp directional signs. This is an illustrative demo record and not an independently verified statement.",
+    "reportedAt": "2026-11-13T14:15:00+05:30",
+    "status": "Active",
+    "source": "Sample",
+    "isSample": true,
+    "reporterContext": "Experienced it",
+    "statusHistory": [
+      {
+        "status": "Active",
+        "at": "2026-11-13T14:15:00+05:30",
+        "note": "Sample record created for demonstration"
+      }
+    ]
+  },
+  {
+    "id": "demo-pathway-004",
+    "location": "Central Walkway",
+    "locationAliases": [
+      "central walkway",
+      "pathway",
+      "walkway",
+      "blocked path",
+      "obstruction"
+    ],
+    "locationDetail": "Connecting pathway near main avenue",
+    "category": "Pathway / Obstruction",
+    "title": "Pathway obstruction example (demo example)",
+    "description": "Sample / Demo – Not Verified: Generic fictional demonstration record to illustrate pathway obstruction reporting and status filtering. Not a verified statement about any campus location.",
+    "reportedAt": "2026-11-14T08:00:00+05:30",
+    "status": "Resolved",
+    "source": "Sample",
+    "isSample": true,
+    "reporterContext": "Observed it",
+    "statusHistory": [
+      {
+        "status": "Active",
+        "at": "2026-11-13T08:00:00+05:30",
+        "note": "Sample record created for demonstration"
+      },
+      {
+        "status": "Resolved",
+        "at": "2026-11-14T08:00:00+05:30",
+        "note": "Demo-only status change in prototype simulation; not verified by university"
+      }
+    ]
+  }
+]
