@@ -19,18 +19,46 @@ interface RouterContextType {
 
 const RouterContext = createContext<RouterContextType | undefined>(undefined);
 
-function parseHash(hash: string): AppRoute {
-  const cleanHash = hash.replace(/^#\/?/, '') || '';
-  const [path, queryString] = cleanHash.split('?');
-  const params = new URLSearchParams(queryString || '');
+/**
+ * Parses route information from location object.
+ * Supports both clean path routing (/search, /submit, /my-reports, /about)
+ * and hash routing (#/search, #/submit, etc.), ensuring compatibility
+ * with direct URL visits, browser refreshes, and existing hash links.
+ */
+export function parseRouteFromLocation(location: {
+  pathname?: string;
+  search?: string;
+  hash?: string;
+}): AppRoute {
+  const hash = location.hash || '';
+  const cleanHash = hash.replace(/^#\/?/, '').trim();
 
-  const segments = path.split('/').filter(Boolean);
+  let routePath = '';
+  let queryString = '';
+
+  // 1. If a non-empty hash route exists (e.g. #/search, #search, #/report/123), prioritize it
+  if (cleanHash) {
+    const [hPath, hQuery] = cleanHash.split('?');
+    routePath = hPath;
+    queryString = hQuery || '';
+  } else {
+    // 2. Otherwise fallback to pathname and search query (e.g. /search, /submit, /my-reports, /about)
+    const rawPath = location.pathname || '';
+    const cleanPath = rawPath.replace(/^\/+|\/+$/g, '');
+    routePath = cleanPath;
+    queryString = (location.search || '').replace(/^\?/, '');
+  }
+
+  const params = new URLSearchParams(queryString);
+  const segments = routePath.split('/').filter(Boolean);
 
   if (segments.length === 0 || segments[0] === '') {
     return { name: 'home' };
   }
 
-  if (segments[0] === 'search') {
+  const rootSegment = segments[0].toLowerCase();
+
+  if (rootSegment === 'search') {
     return {
       name: 'search',
       query: params.get('q') || undefined,
@@ -39,11 +67,11 @@ function parseHash(hash: string): AppRoute {
     };
   }
 
-  if (segments[0] === 'report' && segments[1]) {
+  if (rootSegment === 'report' && segments[1]) {
     return { name: 'report-detail', id: decodeURIComponent(segments[1]) };
   }
 
-  if (segments[0] === 'submit') {
+  if (rootSegment === 'submit') {
     return {
       name: 'submit',
       initialLocation: params.get('loc') || undefined,
@@ -51,44 +79,69 @@ function parseHash(hash: string): AppRoute {
     };
   }
 
-  if (segments[0] === 'my-reports') {
+  if (rootSegment === 'my-reports') {
     return { name: 'my-reports' };
   }
 
-  if (segments[0] === 'moderation') {
+  if (rootSegment === 'moderation') {
     return {
       name: 'moderation',
       focusId: params.get('id') || undefined,
     };
   }
 
-  if (segments[0] === 'about') {
+  if (rootSegment === 'about') {
     return { name: 'about' };
   }
 
   return { name: 'home' };
 }
 
+/**
+ * Backwards compatibility alias for parsing hash string directly
+ */
+export function parseHash(hash: string): AppRoute {
+  return parseRouteFromLocation({ hash });
+}
+
 export const RouterProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [route, setRoute] = useState<AppRoute>(() =>
-    typeof window !== 'undefined' ? parseHash(window.location.hash) : { name: 'home' }
+    typeof window !== 'undefined' ? parseRouteFromLocation(window.location) : { name: 'home' }
   );
 
   useEffect(() => {
-    const handleHashChange = () => {
-      setRoute(parseHash(window.location.hash));
-      window.scrollTo(0, 0);
+    const handleLocationChange = () => {
+      setRoute(parseRouteFromLocation(window.location));
+      if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+        window.scrollTo(0, 0);
+      }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
   }, []);
 
   const navigate = (to: string) => {
     const formatted = to.startsWith('#') ? to : `#/${to.replace(/^\//, '')}`;
+    // If the user arrived directly via a clean pathname route (e.g. /search),
+    // normalize the pathname to '/' when navigating to keep the address bar clean
+    if (typeof window !== 'undefined' && window.location.pathname && window.location.pathname !== '/') {
+      try {
+        window.history.replaceState(null, '', '/' + formatted);
+      } catch {
+        // Safe fallback in restricted environments
+      }
+    }
     window.location.hash = formatted;
-    setRoute(parseHash(formatted));
-    window.scrollTo(0, 0);
+    setRoute(parseRouteFromLocation(window.location));
+    if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+      window.scrollTo(0, 0);
+    }
   };
 
   const navigateToReport = (id: string) => {
@@ -128,4 +181,3 @@ export function useRouter() {
   }
   return context;
 }
-
